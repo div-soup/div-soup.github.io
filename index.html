@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Div Soup</title>
+    <style>
+        body {
+            --bgcolor: lightgreen;
+            font-family: Arial, sans-serif;
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            background: var(--bgcolor)
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            margin-block: .1em;
+        }
+
+        div-soup-ingredients {
+            display: grid;
+            grid: auto/ repeat(2, 1fr);
+            place-items: center;
+        }
+
+        div-display::part(title) {
+            background: var(--bgcolor);
+        }
+    </style>
+    <script>
+        // Helper function for creating Elements
+        const createElement = (
+            tag,
+            { append = [], style = {}, attrs = {}, ...props } = {},
+            element = document.createElement(tag) // create or use existing element
+        ) => {
+            element.append(...append); // append children
+            Object.assign(element.style, style); // assign style
+            Object.entries(attrs).forEach(
+                (
+                    [key, value] // assign attributes
+                ) => element.setAttribute(key, value)
+            );
+            return Object.assign(element, props); // assign properties
+        };
+        // define <div-display> custom element
+        customElements.define('div-display', class extends HTMLElement {
+            connectedCallback() {
+                this.attachShadow({ mode: 'open' })
+                    .append(
+                        createElement('style', {
+                            textContent:
+                                `h3 {background:beige;text-align:center;margin:.5em 0 0 0}` +
+                                `img {max-width: 100%;height: auto}` +
+                                `img {clip-path: inset(1em 0 0 0);margin-top:-1em}` +
+                                ``
+                        }),
+                        createElement('h3', {
+                            part: "title",
+                            append: [createElement('slot')], // default slot takes title in lightDOM
+                        }),
+                        createElement('img', {
+                            src: this.getAttribute('src'),
+                        })
+                    );
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1>DIV-SOUP</h1>
+        <h2>What HTML do you want to work with?</h2>
+    </header>
+    <div-soup-ingredients>
+        <div-display src="elements_react.png">React</div-display>
+        <div-display src="elements_svelte.png">Svelte</div-display>
+        <div-display src="elements_vue.png">Vue</div-display>
+        <div-display src="elements_web_components.png">Web Components</div-display>
+    </div-soup-ingredients>
+</body>
+
+</html>
