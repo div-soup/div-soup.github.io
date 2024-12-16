@@ -1,2 +1,2 @@
-# div-soup.github.io
-&lt;div-soup> What your DOM really looks like
+# https://div-soup.github.io
+What HTML do you want to work with?
